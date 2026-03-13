@@ -67,7 +67,7 @@ models:
     # Claude Sonnet
   - name: Claude Sonnet 4.6 (Copilot_proxy)
     provider: openai
-    model: claude-sonnet-4-20250514
+    model: claude-sonnet-4.6
     apiBase: http://localhost:{PROXY_PORT}
     apiKey: "dummy"
     roles:
@@ -77,7 +77,7 @@ models:
   # Claude Opus
   - name: Claude Opus 4.6 (Copilot_proxy)
     provider: openai
-    model: claude-opus-4-20250514
+    model: claude-opus-4.6
     apiBase: http://localhost:{PROXY_PORT}
     apiKey: "dummy"
     roles:
