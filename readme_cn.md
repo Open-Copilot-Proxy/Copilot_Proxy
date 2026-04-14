@@ -119,7 +119,7 @@ models:
 
 ### 修改端口
 
-编辑 `copilot_proxy.py` 顶部：
+编辑 `main.py` 顶部：
 
 ```python
 PROXY_PORT = 15432  # 改成你想要的端口
@@ -131,7 +131,7 @@ PROXY_PORT = 15432  # 改成你想要的端口
 
 ```bash
 rm .copilot_token.json
-python copilot_proxy.py
+python main.py
 ```
 
 ### 作为其他工具的后端
