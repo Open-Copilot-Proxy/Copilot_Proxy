@@ -32,7 +32,7 @@ pip install flask requests
 ### 2. Run the Script
 
 ```bash
-python copilot_proxy.py
+python main.py
 ```
 
 ### 3. First-Time Authorization
@@ -119,7 +119,7 @@ Open the Continue sidebar in VS Code, select a model, and start chatting.
 
 ### Change Port
 
-Edit the top of `copilot_proxy.py`:
+Edit the top of `main.py`:
 
 ```python
 PROXY_PORT = 15432  # Change to your desired port
@@ -131,7 +131,7 @@ Delete the token file and re-run:
 
 ```bash
 rm .copilot_token.json
-python copilot_proxy.py
+python main.py
 ```
 
 ### Use as a Backend for Other Tools
