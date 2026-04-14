@@ -151,13 +151,13 @@ Continue / Other Clients
         │
         │ POST /chat/completions (OpenAI format)
         ▼
-┌─────────────────────┐
-│  copilot_proxy.py   │  localhost:15432
-│                     │
-│  • OAuth device flow │
-│  • Auto token refresh│
-│  • Request forwarding│
-└─────────────────────┘
+┌───────────────────────┐
+│  copilot_proxy.py     │  localhost:15432
+│                       │
+│  • OAuth device flow  │
+│  • Auto token refresh │
+│  • Request forwarding │
+└───────────────────────┘
         │
         │ Bearer <copilot_token>
         ▼
