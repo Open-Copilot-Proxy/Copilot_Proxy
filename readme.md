@@ -26,7 +26,7 @@ Convert GitHub Copilot into an OpenAI-compatible API with one click. Works with 
 ### 1. Install Dependencies
 
 ```bash
-pip install flask requests
+pip install -r requirements.txt
 ```
 
 ### 2. Run the Script
@@ -46,7 +46,7 @@ The script will automatically open your browser. Follow the prompts:
 
   ┌─────────────────────────────┐
   │                             │
-  │   Code:  ABCD-1234          │
+  │     Code:  ABCD-1234        │
   │                             │
   └─────────────────────────────┘
 

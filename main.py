@@ -73,7 +73,7 @@ def device_auth():
     print(f"")
     print(f"  ┌─────────────────────────────┐")
     print(f"  │                             │")
-    print(f"  │   验证码:  {user_code}       │")
+    print(f"  │     Code:  {user_code}        │")
     print(f"  │                             │")
     print(f"  └─────────────────────────────┘")
     print(f"")
@@ -172,8 +172,10 @@ def token_refresh_loop():
 def proxy(path):
     if copilot_token is None:
         return {"error": "Copilot token 未就绪，请检查授权状态"}, 503
-
-    url = f"https://api.individual.githubcopilot.com/{path}"
+    
+    if path.startswith('v1/'):
+        path = path[3:]
+    url = f"https://api.githubcopilot.com/{path}"
 
     headers = {
         'Content-Type': request.headers.get('Content-Type', 'application/json'),

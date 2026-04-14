@@ -26,7 +26,7 @@
 ### 1. 安装依赖
 
 ```bash
-pip install flask requests
+pip install -r requirements.txt
 ```
 
 ### 2. 运行脚本
@@ -46,7 +46,7 @@ python main.py
 
   ┌─────────────────────────────┐
   │                             │
-  │   验证码:  ABCD-1234         │
+  │     Code:  ABCD-1234        │
   │                             │
   └─────────────────────────────┘
 
@@ -154,9 +154,9 @@ Continue / 其他客户端
 ┌─────────────────────┐
 │  copilot_proxy.py   │  localhost:15432
 │                     │
-│  • OAuth 设备流授权   │
-│  • 自动刷新 Token     │
-│  • 请求转发           │
+│  • OAuth 设备流授权  │
+│  • 自动刷新 Token    │
+│  • 请求转发          │
 └─────────────────────┘
         │
         │ Bearer <copilot_token>
