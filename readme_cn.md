@@ -32,7 +32,7 @@ pip install flask requests
 ### 2. 运行脚本
 
 ```bash
-python copilot_proxy.py
+python main.py
 ```
 
 ### 3. 首次授权
