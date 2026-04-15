@@ -1,0 +1,8 @@
+.copilot_token.json
+.vscode/
+.DS_Store
+
+venv/
+
+test.*
+getmodels.*
