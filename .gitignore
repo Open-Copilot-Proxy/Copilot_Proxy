@@ -1,8 +1,13 @@
+# IDE files
 .copilot_token.json
 .vscode/
 .DS_Store
 
+# Python
 venv/
+__pycache__/
+*.pyc
 
+# Test Scripts
 test.*
 getmodels.*

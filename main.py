@@ -173,8 +173,7 @@ def proxy(path):
     if copilot_token is None:
         return {"error": "Copilot token 未就绪，请检查授权状态"}, 503
     
-    if path.startswith('v1/'):
-        path = path[3:]
+    path = path[3:] if path.startswith('v1/') else path
     url = f"https://api.githubcopilot.com/{path}"
 
     headers = {
@@ -214,7 +213,7 @@ def proxy(path):
             print(f"[!] API 返回 {resp.status_code}: {error_text}")
 
         # 流式转发
-        excluded_headers = ['content-encoding', 'transfer-encoding', 'connection']
+        excluded_headers = ['content-encoding', 'connection']
         response_headers = {
             k: v for k, v in resp.headers.items()
             if k.lower() not in excluded_headers
@@ -223,7 +222,8 @@ def proxy(path):
         return Response(
             resp.iter_content(chunk_size=1024),
             status=resp.status_code,
-            headers=response_headers
+            headers=response_headers,
+            direct_passthrough=True
         )
     except requests.exceptions.Timeout:
         return {"error": "请求超时"}, 504
