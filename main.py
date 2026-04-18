@@ -7,6 +7,7 @@ import os
 import sys
 import webbrowser
 from flask import Flask, request, Response
+import fallback
 
 # 配置
 PROXY_PORT = 15432
@@ -22,6 +23,7 @@ VSCODE_HEADERS = {
 
 github_token = None    # ghu_ 长期 token
 copilot_token = None   # 短期 copilot token
+FALLBACK_MODEL = None  # fallback 模型 id
 
 app = Flask(__name__)
 
@@ -247,6 +249,10 @@ def print_continue_config():
     print(f"按 Ctrl+C 停止代理")
     print(f"{'=' * 50}\n")
 
+@app.route('/fallback', methods=['GET'])
+def get_fallback():
+    return {"fallback_model": FALLBACK_MODEL}
+
 # 主入口
 def main():
     global github_token
@@ -298,6 +304,17 @@ def main():
 
     # 4. 打印配置说明
     print_continue_config()
+
+    # 4.5 选择并打印 fallback 模型
+    try:
+        fm = fallback.choose_fallback_model(models_url=f'http://localhost:{PROXY_PORT}/v1/models')
+        if fm:
+            FALLBACK_MODEL = fm
+            print(f"[~] 已选择回退模型: {FALLBACK_MODEL}")
+        else:
+            print(f"[~] 未能找到合适的回退模型")
+    except Exception as e:
+        print(f"[!] 回退模型选择失败: {e}")
 
     # 5. 启动 Flask 代理
     import logging
