@@ -29,7 +29,7 @@ You can download prebuilt executables from the GitHub Releases page and run them
 
 - **Windows**: `Copilot_Proxy-windows.exe`
 
-- **macOS**: `Copilot_Proxy-macos` (Mach-O executable)
+- **macOS**: `Copilot_Proxy-macos`
 
   Make executable and run:
 
