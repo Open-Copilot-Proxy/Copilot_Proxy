@@ -21,21 +21,44 @@ Convert GitHub Copilot into an OpenAI-compatible API with one click. Works with 
 
 2. **Python 3.7+**
 
-## 🚀 Quick Start
+## ⬇️ Download & Install
 
-### 1. Install Dependencies
+### Download releases
+
+You can download prebuilt executables from the GitHub Releases page and run them directly:
+
+- **Windows**: `Copilot_Proxy-windows.exe`
+
+- **macOS**: `Copilot_Proxy-macos` (Mach-O executable)
+
+  Make executable and run:
+
+  ```bash
+  chmod +x Copilot_Proxy-macos
+  ./Copilot_Proxy-macos
+  ```
+
+> All release files are automatically built by GitHub Actions, source code is fully open and auditable
+
+### Build from source
+
+1. Install dependencies
 
 ```bash
+git clone https://github.com/Open-Copilot-Proxy/Copilot_Proxy.git
+cd Copilot_Proxy
 pip install -r requirements.txt
 ```
 
-### 2. Run the Script
+2. Run the Script
 
 ```bash
 python main.py
 ```
 
-### 3. First-Time Authorization
+## 🚀 Quick Start
+
+### 1. First-Time Authorization
 
 The script will automatically open your browser. Follow the prompts:
 
@@ -58,7 +81,7 @@ The script will automatically open your browser. Follow the prompts:
 [✓] Authorization successful!
 ```
 
-### 4. Configure Continue
+### 2. Configure Continue
 
 Open Continue's `config.yaml` and add model configurations:
 
@@ -111,7 +134,7 @@ models:
       - autocomplete
 ```
 
-### 5. Start Using
+### 3. Start Using
 
 Open the Continue sidebar in VS Code, select a model, and start chatting.
 

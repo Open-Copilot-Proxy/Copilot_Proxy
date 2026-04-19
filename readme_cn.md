@@ -21,21 +21,44 @@
 
 2. **Python 3.7+**
 
-## 🚀 快速开始
+## ⬇️ 下载安装
 
-### 1. 安装依赖
+### 从 Release 下载
+
+直接在 GitHub Releases 页面下载对应平台的可执行文件并运行：
+
+- **Windows**: `Copilot_Proxy-windows.exe`
+
+- **macOS**: `Copilot_Proxy-macos`
+
+  赋予可执行权限并运行：
+
+  ```bash
+  chmod +x Copilot_Proxy-macos
+  ./Copilot_Proxy-macos
+  ```
+
+> 所有release文件均由 GitHub Actions 自动构建生成，原代码完全公开可查
+
+### 从源码构建
+
+1. 安装依赖
 
 ```bash
+git clone https://github.com/Open-Copilot-Proxy/Copilot_Proxy.git
+cd Copilot_Proxy
 pip install -r requirements.txt
 ```
 
-### 2. 运行脚本
+2. 运行脚本
 
 ```bash
 python main.py
 ```
 
-### 3. 首次授权
+## 🚀 快速开始
+
+### 1. 首次授权
 
 脚本会自动打开浏览器，按提示操作：
 
@@ -58,7 +81,7 @@ python main.py
 [✓] 授权成功!
 ```
 
-### 4. 配置 Continue
+### 2. 配置 Continue
 
 打开 Continue 的 `config.yaml`，添加模型配置：
 
@@ -111,7 +134,7 @@ models:
       - autocomplete
 ```
 
-### 5. 开始使用
+### 3. 开始使用
 
 在 VS Code 中打开 Continue 侧边栏，选择模型，开始对话
 
