@@ -7,8 +7,11 @@ on:
 
 jobs:
   build:
-    name: Build (Nuitka) — ${{ matrix.os }}
+    name: Build and Release — ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     strategy:
       matrix:
         os: [windows-latest, macos-latest]
@@ -28,12 +31,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
-          pip install nuitka
+          pip install "Nuitka[onefile]"
 
       - name: Build with Nuitka
         run: |
           mkdir -p dist || true
-          python -m nuitka --standalone --onefile --output-dir=dist main.py
+          python -m nuitka --assume-yes-for-downloads --standalone --onefile --output-dir=dist main.py
 
       - name: Prepare named executable
         run: |
@@ -73,6 +76,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: startsWith(github.ref, 'refs/tags/')
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
