@@ -144,6 +144,22 @@ API Key:  任意值（如 "dummy"）
 Model:    claude-sonnet-4.6
 ```
 
+### 模型回退（Model Fallback）
+
+- **作用**：当上游返回 `model_not_supported`（模型对当前账号不可用）时，代理会自动用可用模型重试，避免客户端请求直接失败。
+
+- **工作原理**：代理启动时会调用 `fallback.py` 查询 Copilot 的模型列表并选择一个回退模型（默认优先列表见 `fallback.py`：`gpt-4.1`, `gpt-4o`, `gpt-5-mini`, `raptor-mini`）。当上游返回 400 且错误码为 `model_not_supported` 时，代理会把请求体顶层的 `model` 字段替换为回退模型并重试一次。当前选中的回退模型可通过 `GET /fallback` 查询。
+
+- **自定义**：编辑 `fallback.py` 修改 `PREFERRED_PREFIXES` 或选择逻辑。选择逻辑会优先精确 id 匹配，然后按前缀匹配。
+
+- **查询回退模型**：
+
+```bash
+curl -sS http://localhost:15432/fallback
+```
+
+- **测试**：将客户端指向 `http://localhost:15432` 并请求一个不可用模型（如 `claude-mythos-preview`），在代理日志中会看到回退重试的记录。
+
 ## 🏗️ 工作原理
 
 ```

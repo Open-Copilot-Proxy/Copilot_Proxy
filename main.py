@@ -172,6 +172,8 @@ def token_refresh_loop():
 # HTTP 代理
 @app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'])
 def proxy(path):
+    global FALLBACK_MODEL
+
     if copilot_token is None:
         return {"error": "Copilot token 未就绪，请检查授权状态"}, 503
     
@@ -214,8 +216,55 @@ def proxy(path):
             error_text = resp.text[:500]
             print(f"[!] API 返回 {resp.status_code}: {error_text}")
 
+        # 如果远端返回 model_not_supported，先提示，再用回退模型重试一次
+        if resp.status_code == 400:
+            try:
+                err_json = resp.json()
+                err = err_json.get('error', {}) if isinstance(err_json, dict) else {}
+                code = err.get('code')
+                msg = err.get('message', '')
+            except Exception:
+                code = None
+                msg = resp.text or ''
+
+            if code == 'model_not_supported' or 'not supported' in (msg or '').lower():
+                try:
+                    requested_model = None
+                    new_body = body
+                    if body:
+                        text_body = body.decode() if isinstance(body, (bytes, bytearray)) else body
+                        parsed = json.loads(text_body)
+                        if isinstance(parsed, dict) and parsed.get('model'):
+                            requested_model = parsed.get('model')
+                            if not FALLBACK_MODEL:
+                                FALLBACK_MODEL = fallback.choose_fallback_model(models_url=f'http://localhost:{PROXY_PORT}/v1/models')
+                            parsed['model'] = FALLBACK_MODEL
+                            new_body = json.dumps(parsed).encode()
+
+                    if not FALLBACK_MODEL:
+                        print(f"[!] 模型不可用: {requested_model or 'unknown'}，且未找到可用 fallback")
+                    else:
+                        print(f"[!] 模型不可用: {requested_model or 'unknown'}，回退到: {FALLBACK_MODEL}")
+
+                    # 重试一次
+                    if FALLBACK_MODEL:
+                        resp2 = requests.request(
+                            method=request.method,
+                            url=url,
+                            headers=headers,
+                            data=new_body,
+                            stream=True,
+                            timeout=120
+                        )
+                        resp = resp2
+                        if resp.status_code != 200:
+                            error_text = resp.text[:500]
+                            print(f"[!] 回退尝试仍返回 {resp.status_code}: {error_text}")
+                except Exception as e:
+                    print(f"[!] 回退重试失败: {e}")
+
         # 流式转发
-        excluded_headers = ['content-encoding', 'connection']
+        excluded_headers = ['content-encoding', 'connection', 'transfer-encoding', 'content-length']
         response_headers = {
             k: v for k, v in resp.headers.items()
             if k.lower() not in excluded_headers
@@ -255,7 +304,7 @@ def get_fallback():
 
 # 主入口
 def main():
-    global github_token
+    global github_token, FALLBACK_MODEL
 
     print(r"""
    ____            _ _       _     ____
@@ -305,9 +354,14 @@ def main():
     # 4. 打印配置说明
     print_continue_config()
 
-    # 4.5 选择并打印 fallback 模型
+    ## 4.5 选择并打印 fallback 模型，直接用 copilot_token 查询远端模型列表
     try:
-        fm = fallback.choose_fallback_model(models_url=f'http://localhost:{PROXY_PORT}/v1/models')
+        if copilot_token:
+            headers_for_models = {**VSCODE_HEADERS, 'Authorization': f'Bearer {copilot_token}'}
+            fm = fallback.choose_fallback_model(models_url='https://api.githubcopilot.com/models', headers=headers_for_models)
+        else:
+            fm = fallback.choose_fallback_model(models_url=f'http://localhost:{PROXY_PORT}/v1/models')
+
         if fm:
             FALLBACK_MODEL = fm
             print(f"[~] 已选择回退模型: {FALLBACK_MODEL}")

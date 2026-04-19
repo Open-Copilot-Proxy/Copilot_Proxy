@@ -144,6 +144,22 @@ API Key:  any value (e.g. "dummy")
 Model:    claude-sonnet-4.6
 ```
 
+### Model Fallback
+
+- **What it does**: If a requested model is unavailable for your Copilot account (the Copilot API returns a `model_not_supported` error), the proxy can automatically retry the request using a supported fallback model so clients don't fail immediately.
+
+- **How it works**: On startup the proxy selects a fallback model by querying the Copilot models endpoint (selection logic lives in `fallback.py`). The default priority list is defined in `fallback.py` (for example: `gpt-4.1`, `gpt-4o`, `gpt-5-mini`, `raptor-mini`). When the upstream returns a 400 with code `model_not_supported`, the proxy replaces the top-level `model` field in the client JSON with the chosen fallback model and retries once. The proxy also exposes the currently selected fallback via `GET /fallback`.
+
+- **Customize**: Edit `fallback.py` to change the `PREFERRED_PREFIXES` or the selection logic. The script will pick the first usable model matching the configured priorities.
+
+- **Check current fallback**:
+
+```bash
+curl -sS http://localhost:15432/fallback
+```
+
+- **Testing**: point a client at `http://localhost:15432` and request an unsupported model (e.g., `claude-mythos-preview`) — watch the proxy logs for fallback messages.
+
 ## 🏗️ How It Works
 
 ```
